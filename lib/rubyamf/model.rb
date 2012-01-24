@@ -119,7 +119,7 @@ module RubyAMF
         if respond_to?(setter)
           send(setter, attrs.delete(k))
         else
-          RubyAMF.logger.warn("RubyAMF: Cannot call setter for non-attribute on #{self.class.name}: #{k}. Inspect: #{inspect}")
+          RubyAMF.logger.warn("RubyAMF: Cannot call setter for non-attribute on #{self.class.name}: #{k}, id: #{id}.")
           attrs.delete(k)
         end
       end
