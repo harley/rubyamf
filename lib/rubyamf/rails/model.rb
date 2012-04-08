@@ -42,6 +42,13 @@ module RubyAMF::Rails
         pk_attrs = pk.inject({}) {|h, k| h[k] = attrs[k]; h}
         base_attrs.merge!(pk_attrs)
 
+        # Load existing values of the attributes from the existing record in the database
+        # This is so that any changed properties will be marked dirty properly
+        # Otherwise, without this, I think when the new values for certain properties happen to be the same as the default values in base_attrs loaded from `self.class.column_defaults.dup` earlier (but the current/soon-to-be-previous values are different), these properties will not be marked dirty and will not be saved.
+        if existing_record = self.class.where(pk_attrs).first
+          base_attrs.merge!(existing_record.attributes)
+        end
+
         if ::ActiveRecord::VERSION::MAJOR == 2
           # if rails 2, use code from ActiveRecord::Base#instantiate (just copied it over)
           object = self
