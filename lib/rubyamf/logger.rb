@@ -30,6 +30,7 @@ module RubyAMF
     # Use Rails backtrace cleaner if it exists to clean
     def clean_backtrace e
       if defined?(Rails) && ::Rails.respond_to?(:backtrace_cleaner)
+        ::Rails.backtrace_cleaner.remove_silencers!
         ::Rails.backtrace_cleaner.clean(e.backtrace)
       else
         e.backtrace

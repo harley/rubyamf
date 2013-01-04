@@ -99,8 +99,10 @@ module RubyAMF::Rails
 
       # Set attributes
       rubyamf_set_non_attributes attrs, base_attrs
+      # Hotfix for Rails bug - https://github.com/rails/rails/issues/8757
+      attrs.each { |k,v| attrs[k] = nil if v.respond_to?(:nan?) && v.nan? }
       self.send(:attributes=, attrs)
-
+      
       self
     end
 
